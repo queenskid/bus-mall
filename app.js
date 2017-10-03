@@ -99,7 +99,7 @@ function switchPhoto(element) {
     photoDisplay();
     totalClicks++;
   } else {
-    alert("no sea fresco!")
+    alert("You Have completed the Survey!")
   }
 }
 
