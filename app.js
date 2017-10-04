@@ -84,7 +84,7 @@ function randomPhoto() {
         Photo.allPhotos[i].votes += 1;
       }
     }
-      if(Photo.totalClicks > 5) {
+      if(Photo.totalClicks > 4) {
       Photo.section.removeEventListener('click', handleClick);
       canvas.removeAttribute('hidden');
       leftEl.setAttribute('hidden', true);
@@ -106,3 +106,9 @@ function randomPhoto() {
   Photo.section.addEventListener('click', handleClick);
 
   randomPhoto();
+
+
+
+// fucntion showChart() {
+//
+// }
