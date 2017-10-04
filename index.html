@@ -4,15 +4,20 @@
     <meta charset="utf-8">
     <title>Bus Mall Analytics</title>
     <link rel="stylesheet" type="text/css" href="style.css">
+     <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.0/Chart.min.js"></script>
   </head>
   <body>
     <h1>Click a  to see a new image</h1>
-    <img id="pic1" onclick="switchPhoto(this)">
-    <img id="pic2" onclick="switchPhoto(this)">
-    <img id="pic3" onclick="switchPhoto(this)">
+
+    <section id="image-section">
+    <img id="left" onclick="">
+    <img id="middle" onclick="">
+    <img id="right" onclick="">
+    </section>
+
     <script src="app.js"></script>
 
     </script>
-
   </body>
+    <canvas id="canvas" width="800px" height="400px" hidden="true"></canvas>
 </html>

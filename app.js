@@ -1,114 +1,108 @@
 'use strict';
 
-function Photo(name, filepath) {
+Photo.allPhotos = [];
+Photo.lastShown = [];
+Photo.totalClicks = 0;
+
+Photo.section = document.getElementById('image-section');
+Photo.resultsList = document.getElementById('results');
+
+function Photo(name, filepath, altText) {
   this.name = name;
   this.filepath = filepath;
-  this.votes = 0;
+  this.altText = altText;
   this.views = 0;
+  this.votes = 0;
+  Photo.allPhotos.push(this);
 };
 
-Photo.prototype.clicked = function(){
-  this.votes++;
+new Photo('bag', 'images/bag.jpg'),
+new Photo('banana', 'images/banana.jpg'),
+new Photo('bathroom', 'images/bathroom.jpg'),
+new Photo('boots', 'images/boots.jpg'),
+new Photo('breakfast', 'images/breakfast.jpg'),
+new Photo('bubblegum', 'images/bubblegum.jpg'),
+new Photo('chair', 'images/chair.jpg'),
+new Photo('cthulhu', 'images/cthulhu.jpg'),
+new Photo('dog-duck', 'images/dog-duck.jpg'),
+new Photo('dragon', 'images/dragon.jpg'),
+new Photo('pen', 'images/pen.jpg'),
+new Photo('pet-sweep', 'images/pet-sweep.jpg'),
+new Photo('scissors', 'images/scissors.jpg'),
+new Photo('shark', 'images/shark.jpg'),
+new Photo('sweep', 'images/sweep.png'),
+new Photo('tauntaun', 'images/tauntaun.jpg'),
+new Photo('unicorn', 'images/unicorn.jpg'),
+new Photo('usb', 'images/usb.gif'),
+new Photo('water-can', 'images/water-can.jpg'),
+new Photo('wine-glass', 'images/wine-glass.jpg')
+
+
+var leftEl = document.getElementById('left');
+var middleEl = document.getElementById('middle');
+var rightEl = document.getElementById('right');
+
+function randomPhoto() {
+  var randomLeft = Math.floor(Math.random() * Photo.allPhotos.length);
+  var randomMiddle = Math.floor(Math.random() * Photo.allPhotos.length);
+  var randomRight = Math.floor(Math.random() * Photo.allPhotos.length);
+
+  while(Photo.lastShown.includes(randomRight) || Photo.lastShown.includes(randomLeft) || Photo.lastShown.includes(randomMiddle) || randomLeft === randomMiddle || randomRight === randomLeft || randomRight === randomMiddle) {
+    randomRight = Math.floor(Math.random() * Photo.allPhotos.length);
+    randomMiddle = Math.floor(Math.random() * Photo.allPhotos.length);
+    randomLeft = Math.floor(Math.random() * Photo.allPhotos.length);
+    console.log(randomLeft, randomMiddle, randomRight);
+  }
+  rightEl.src = Photo.allPhotos[randomRight].filepath;
+  rightEl.alt = Photo.allPhotos[randomRight].altText;
+
+  middleEl.src = Photo.allPhotos[randomMiddle].filepath;
+  middleEl.alt = Photo.allPhotos[randomMiddle].altText;
+
+  leftEl.src = Photo.allPhotos[randomLeft].filepath;
+  leftEl.alt = Photo.allPhotos[randomLeft].altText;
+
+
+  Photo.allPhotos[randomLeft].views += 1;
+  Photo.allPhotos[randomMiddle].views += 1;
+  Photo.allPhotos[randomRight].views += 1;
+
+  Photo.lastShown = [];
+  Photo.lastShown.push(randomLeft, randomMiddle, randomRight);
+
 };
 
-Photo.prototype.viewed = function(){
-  this.views++;
-};
-
-var official = [];
-var totalClicks = 0;
-var allPics = [
-  new Photo('bag', 'images/bag.jpg'),
-  new Photo('banana', 'images/banana.jpg'),
-  new Photo('bathroom', 'images/bathroom.jpg'),
-  new Photo('boots', 'images/boots.jpg'),
-  new Photo('breakfast', 'images/breakfast.jpg'),
-  new Photo('bubblegum', 'images/bubblegum.jpg'),
-  new Photo('chair', 'images/chair.jpg'),
-  new Photo('cthulhu', 'images/cthulhu.jpg'),
-  new Photo('dog-duck', 'images/dog-duck.jpg'),
-  new Photo('dragon', 'images/dragon.jpg'),
-  new Photo('pen', 'images/pen.jpg'),
-  new Photo('pet-sweep', 'images/pet-sweep.jpg'),
-  new Photo('scissors', 'images/scissors.jpg'),
-  new Photo('shark', 'images/shark.jpg'),
-  new Photo('sweep', 'images/sweep.png'),
-  new Photo('tauntaun', 'images/tauntaun.jpg'),
-  new Photo('unicorn', 'images/unicorn.jpg'),
-  new Photo('usb', 'images/usb.gif'),
-  new Photo('water-can', 'images/water-can.jpg'),
-  new Photo('wine-glass', 'images/wine-glass.jpg')
-];
-
-var photoDisplay = function() {
-  var current = [];
-  while(current.length < 3) {
-    var photo = randomPhoto();
-    var duplicate = false;
-    for(var i = 0; i < official.length; i++) {
-      if(official[i].name == photo.name) {
-        duplicate = true;
-      }
+  function handleClick(e) {
+    if(e.target.id === 'image-section') {
+      return alert('Please select an image');
     }
 
-    if(!duplicate) {
-      for(var j = 0; j < current.length; j++) {
-        if(current[j].name == photo.name) {
-          duplicate = true;
-        }
+    Photo.totalClicks += 1;
+
+    for(var i = 0; i < Photo.allPhotos.length; i++) {
+      if(event.target.alt === Photo.allPhotos[i].altText) {
+        Photo.allPhotos[i].votes += 1;
       }
     }
+      if(Photo.totalClicks > 5) {
+      Photo.section.removeEventListener('click', handleClick);
+      canvas.removeAttribute('hidden');
+      leftEl.setAttribute('hidden', true);
+      rightEl.setAttribute('hidden', true);
+      middleEl.setAttribute('hidden', true);
+      showResults();
+    }
+    randomPhoto();
+  }
 
-    if(!duplicate) {
-      photo.viewed();
-      current.push(photo);
+  function showResults() {
+    for(var i = 0; i < Photo.allPhotos.length; i++) {
+      var liEl = document.createElement('li');
+      liEl.textContent = Photo.allPhotos[i].name + ' has ' + Photo.allPhotos[i].votes + ' votes in ' + Photo.allPhotos[i].views + ' times shown.';
+      Photo.resultsList.appendChild(liEl);
     }
   }
 
-  document.getElementById("pic1").src = current[0].filepath;
-  document.getElementById("pic2").src = current[1].filepath;
-  document.getElementById("pic3").src = current[2].filepath;
+  Photo.section.addEventListener('click', handleClick);
 
-  document.getElementById("pic1").alt = current[0].name;
-  document.getElementById("pic2").alt = current[1].name;
-  document.getElementById("pic3").alt = current[2].name;
-  official = current;
-}
-
-photoDisplay();
-/*
-// listener, and somthing to be clicked
-
-
-var imgEl = document.getElementById('pics');
-
-imgEl.addEventListener('click', randomPhoto);
-
-// randomly display one of the picture
-*/
-function randomPhoto(){
-  var randomIndex = Math.floor(Math.random() * allPics.length);
-  return allPics[randomIndex];
-}
-
-function switchPhoto(element) {
-  var clicked_photo = getPhotoByName(element.alt);
-  clicked_photo.clicked();
-  console.log(clicked_photo);
-  if(totalClicks < 25) {
-    photoDisplay();
-    totalClicks++;
-  } else {
-    alert("You Have completed the Survey!")
-  }
-}
-
-function getPhotoByName(name) {
-  var photo = null;
-  allPics.forEach(function(item) {
-    if(item.name == name) {
-      photo = item;
-    }
-  })
-  return photo;
-}
+  randomPhoto();
