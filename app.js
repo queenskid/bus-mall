@@ -5,12 +5,11 @@ Photo.lastShown = [];
 Photo.totalClicks = 0;
 
 Photo.section = document.getElementById('image-section');
-Photo.resultsList = document.getElementById('results');
+Photo.set3 = document.getElementById('set3');
 
-function Photo(name, filepath, altText) {
+function Photo(name, filepath) {
   this.name = name;
   this.filepath = filepath;
-  this.altText = altText;
   this.views = 0;
   this.votes = 0;
   Photo.allPhotos.push(this);
@@ -51,16 +50,16 @@ function randomPhoto() {
     randomRight = Math.floor(Math.random() * Photo.allPhotos.length);
     randomMiddle = Math.floor(Math.random() * Photo.allPhotos.length);
     randomLeft = Math.floor(Math.random() * Photo.allPhotos.length);
-    console.log(randomLeft, randomMiddle, randomRight);
+    // console.log(randomLeft, randomMiddle, randomRight);
   }
   rightEl.src = Photo.allPhotos[randomRight].filepath;
-  rightEl.alt = Photo.allPhotos[randomRight].altText;
+  rightEl.id = Photo.allPhotos[randomRight].name;
 
   middleEl.src = Photo.allPhotos[randomMiddle].filepath;
-  middleEl.alt = Photo.allPhotos[randomMiddle].altText;
+  middleEl.id = Photo.allPhotos[randomMiddle].name;
 
   leftEl.src = Photo.allPhotos[randomLeft].filepath;
-  leftEl.alt = Photo.allPhotos[randomLeft].altText;
+  leftEl.id = Photo.allPhotos[randomLeft].name;
 
 
   Photo.allPhotos[randomLeft].views += 1;
@@ -72,37 +71,83 @@ function randomPhoto() {
 
 };
 
-  function handleClick(e) {
-    if(e.target.id === 'image-section') {
-      return alert('Please select an image');
-    }
-
-    Photo.totalClicks += 1;
-
-    for(var i = 0; i < Photo.allPhotos.length; i++) {
-      if(event.target.alt === Photo.allPhotos[i].altText) {
-        Photo.allPhotos[i].votes += 1;
-      }
-    }
-      if(Photo.totalClicks > 5) {
-      Photo.section.removeEventListener('click', handleClick);
-      canvas.removeAttribute('hidden');
-      leftEl.setAttribute('hidden', true);
-      rightEl.setAttribute('hidden', true);
-      middleEl.setAttribute('hidden', true);
-      showResults();
-    }
-    randomPhoto();
+function handleClick(e) {
+  if(e.target.id === 'set3') {
+    return alert('Please select an image');
   }
 
-  function showResults() {
-    for(var i = 0; i < Photo.allPhotos.length; i++) {
-      var liEl = document.createElement('li');
-      liEl.textContent = Photo.allPhotos[i].name + ' has ' + Photo.allPhotos[i].votes + ' votes in ' + Photo.allPhotos[i].views + ' times shown.';
-      Photo.resultsList.appendChild(liEl);
+  Photo.totalClicks += 1;
+
+  for(var i = 0; i < Photo.allPhotos.length; i++) {
+    if(event.target.id === Photo.allPhotos[i].name) {
+      Photo.allPhotos[i].votes += 1;
+      console.log(Photo.allPhotos[i].votes + 'votes');
     }
   }
-
-  Photo.section.addEventListener('click', handleClick);
-
+  if(Photo.totalClicks > 4) {
+    Photo.set3.removeEventListener('click', handleClick);
+    chart.removeAttribute('hidden');
+    leftEl.setAttribute('hidden', true);
+    rightEl.setAttribute('hidden', true);
+    middleEl.setAttribute('hidden', true);
+    showResults();
+  }
   randomPhoto();
+}
+
+function showResults() {
+  for(var i = 0; i < Photo.allPhotos.length; i++) {
+    var liEl = document.createElement('li');
+    liEl.textContent = Photo.allPhotos[i].name + ' has ' + Photo.allPhotos[i].votes + ' votes in ' + Photo.allPhotos[i].views + ' times shown.';
+    Photo.set3.appendChild(liEl);
+  }
+}
+
+Photo.set3.addEventListener('click', handleClick);
+randomPhoto();
+
+// document.getElementById('set3').style.backgroundColor = 'rgba(63, 127, 191, 0.4)'
+// showChart();
+//
+// /////stop///////
+//
+// function showChart() {
+//   var ctx = document.getElementById('chart');
+//   var myChart = new Chart(ctx, {
+//     type: 'bar',
+//     data: {
+//       labels: Photo.allPhotos,
+//       datasets: [
+//         {
+//           label: '25 total votes',
+//           data: Photo.votes,
+//           backgroundColor: [
+//             'rgba(63, 127, 191, 0.4)'
+//           ],
+//           hoverBackgroundColor: [
+//             'rgba(122, 203, 41, 0.1)'
+//           ],
+//           borderWidth: 1
+//         }
+//       ]
+//     },
+//     options: {
+//       responsiveness: false,
+//       scales: {
+//         xAxes: [{
+//           ticks: {
+//             beginAtZero: true
+//           }
+//         }],
+//         yAxes:[
+//           {
+//             ticks: {
+//               stepSize: 1,
+//               beginAtZero: true,
+//             }
+//           }
+//         ]
+//       }
+//     }
+//   });
+// }
