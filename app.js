@@ -3,8 +3,10 @@
 Photo.allPhotos = [];
 Photo.lastShown = [];
 Photo.totalClicks = 0;
+var data = [];
+var labels = [];
 
-Photo.section = document.getElementById('image-section');
+// Photo.section = document.getElementById('image-section');
 Photo.set3 = document.getElementById('set3');
 
 function Photo(name, filepath) {
@@ -71,6 +73,9 @@ function randomPhoto() {
 
 };
 
+
+
+
 function handleClick(e) {
   if(e.target.id === 'set3') {
     return alert('Please select an image');
@@ -81,20 +86,20 @@ function handleClick(e) {
   for(var i = 0; i < Photo.allPhotos.length; i++) {
     if(event.target.id === Photo.allPhotos[i].name) {
       Photo.allPhotos[i].votes += 1;
-      console.log(Photo.allPhotos[i].votes + 'votes');
+      // console.log(Photo.allPhotos[i].votes + 'votes');
     }
   }
-  if(Photo.totalClicks > 4) {
+  if(Photo.totalClicks > 24) {
     Photo.set3.removeEventListener('click', handleClick);
     chart.removeAttribute('hidden');
     leftEl.setAttribute('hidden', true);
     rightEl.setAttribute('hidden', true);
     middleEl.setAttribute('hidden', true);
-    showResults();
+    // document.getElementById('set3').style.backgroundColor = 'rgba(63, 127, 191, 0.4)'
+    // showResults();
   }
   randomPhoto();
 }
-
 function showResults() {
   for(var i = 0; i < Photo.allPhotos.length; i++) {
     var liEl = document.createElement('li');
@@ -106,48 +111,57 @@ function showResults() {
 Photo.set3.addEventListener('click', handleClick);
 randomPhoto();
 
-// document.getElementById('set3').style.backgroundColor = 'rgba(63, 127, 191, 0.4)'
-// showChart();
-//
-// /////stop///////
-//
-// function showChart() {
-//   var ctx = document.getElementById('chart');
-//   var myChart = new Chart(ctx, {
-//     type: 'bar',
-//     data: {
-//       labels: Photo.allPhotos,
-//       datasets: [
-//         {
-//           label: '25 total votes',
-//           data: Photo.votes,
-//           backgroundColor: [
-//             'rgba(63, 127, 191, 0.4)'
-//           ],
-//           hoverBackgroundColor: [
-//             'rgba(122, 203, 41, 0.1)'
-//           ],
-//           borderWidth: 1
-//         }
-//       ]
-//     },
-//     options: {
-//       responsiveness: false,
-//       scales: {
-//         xAxes: [{
-//           ticks: {
-//             beginAtZero: true
-//           }
-//         }],
-//         yAxes:[
-//           {
-//             ticks: {
-//               stepSize: 1,
-//               beginAtZero: true,
-//             }
-//           }
-//         ]
-//       }
-//     }
-//   });
-// }
+
+function ChartArray() {
+  for (var i = 0; i < Photo.allPhotos.length; i++) {
+    data[i] = Photo.allPhotos[i].votes;
+    labels[i] = Photo.allPhotos[i].name;
+  }
+}
+
+    // console.log(labels, data);
+ChartArray();
+showChart();
+
+
+
+function showChart() {
+  var ctx = document.getElementById('chart').getContext('2d');
+  var myChart = new Chart(ctx,{
+    type: 'bar',
+    data: {
+      labels: labels,
+      datasets: [
+        {
+          label: '25 total votes',
+          data: data,
+          backgroundColor: [
+            'rgba(63, 127, 191, 0.4)'
+          ],
+          hoverBackgroundColor: [
+            'rgba(122, 203, 41, 0.1)'
+          ],
+          borderWidth: 1
+        }
+      ]
+    },
+    options: {
+      responsiveness: false,
+      scales: {
+        xAxes: [{
+          ticks: {
+            beginAtZero: true
+          }
+        }],
+        yAxes:[
+          {
+            ticks: {
+              stepSize: 1,
+              beginAtZero: true,
+            }
+          }
+        ]
+      }
+    }
+  });
+}
