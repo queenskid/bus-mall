@@ -6,7 +6,7 @@ Photo.totalClicks = 0;
 var data = [];
 var labels = [];
 
-Photo.section = document.getElementById('image-section');
+// Photo.section = document.getElementById('image-section');
 Photo.set3 = document.getElementById('set3');
 
 function Photo(name, filepath) {
@@ -73,30 +73,6 @@ function randomPhoto() {
 
 };
 
-function handleClick(e) {
-  if(e.target.id === 'set3') {
-    return alert('Please select an image');
-  }
-
-  Photo.totalClicks += 1;
-
-  for(var i = 0; i < Photo.allPhotos.length; i++) {
-    if(event.target.id === Photo.allPhotos[i].name) {
-      Photo.allPhotos[i].votes += 1;
-      // console.log(Photo.allPhotos[i].votes + 'votes');
-    }
-  }
-  if(Photo.totalClicks > 4) {
-    Photo.set3.removeEventListener('click', handleClick);
-    chart.removeAttribute('hidden');
-    leftEl.setAttribute('hidden', true);
-    rightEl.setAttribute('hidden', true);
-    middleEl.setAttribute('hidden', true);
-    // document.getElementById('set3').style.backgroundColor = 'rgba(63, 127, 191, 0.4)'
-    // showResults();
-  }
-  randomPhoto();
-}
 
 function showResults() {
   for(var i = 0; i < Photo.allPhotos.length; i++) {
@@ -112,8 +88,8 @@ randomPhoto();
 
 function ChartArray() {
   for (var i = 0; i < Photo.allPhotos.length; i++) {
-    labels[i] = Photo.allPhotos[i].name;
     data[i] = Photo.allPhotos[i].votes;
+    labels[i] = Photo.allPhotos[i].name;
   }
 }
 
@@ -123,7 +99,7 @@ showChart();
 
 function showChart() {
   var ctx = document.getElementById('chart').getContext('2d');
-  var myChart = new Chart(ctx, {
+  var myChart = new Chart(ctx,{
     type: 'bar',
     data: {
       labels: labels,
@@ -160,4 +136,29 @@ function showChart() {
       }
     }
   });
+}
+
+function handleClick(e) {
+  if(e.target.id === 'set3') {
+    return alert('Please select an image');
+  }
+
+  Photo.totalClicks += 1;
+
+  for(var i = 0; i < Photo.allPhotos.length; i++) {
+    if(event.target.id === Photo.allPhotos[i].name) {
+      Photo.allPhotos[i].votes += 1;
+      // console.log(Photo.allPhotos[i].votes + 'votes');
+    }
+  }
+  if(Photo.totalClicks > 4) {
+    Photo.set3.removeEventListener('click', handleClick);
+    chart.removeAttribute('hidden');
+    leftEl.setAttribute('hidden', true);
+    rightEl.setAttribute('hidden', true);
+    middleEl.setAttribute('hidden', true);
+    // document.getElementById('set3').style.backgroundColor = 'rgba(63, 127, 191, 0.4)'
+    // showResults();
+  }
+  randomPhoto();
 }
