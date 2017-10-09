@@ -3,6 +3,8 @@
 Photo.allPhotos = [];
 Photo.lastShown = [];
 Photo.totalClicks = 0;
+Photo.data = [];
+Photo.labels = [];
 var data = [];
 var labels = [];
 
@@ -17,6 +19,11 @@ function Photo(name, filepath) {
   Photo.allPhotos.push(this);
 };
 
+// if (Boolean(localStorage)) {
+//   Photo.allPhotos = JSON.parse(localStorage.allPhotos)
+// } else {
+//
+// }
 new Photo('bag', 'images/bag.jpg'),
 new Photo('banana', 'images/banana.jpg'),
 new Photo('bathroom', 'images/bathroom.jpg'),
@@ -38,7 +45,6 @@ new Photo('usb', 'images/usb.gif'),
 new Photo('water-can', 'images/water-can.jpg'),
 new Photo('wine-glass', 'images/wine-glass.jpg')
 
-
 var leftEl = document.getElementById('left');
 var middleEl = document.getElementById('middle');
 var rightEl = document.getElementById('right');
@@ -52,8 +58,8 @@ function randomPhoto() {
     randomRight = Math.floor(Math.random() * Photo.allPhotos.length);
     randomMiddle = Math.floor(Math.random() * Photo.allPhotos.length);
     randomLeft = Math.floor(Math.random() * Photo.allPhotos.length);
-    // console.log(randomLeft, randomMiddle, randomRight);
   }
+
   rightEl.src = Photo.allPhotos[randomRight].filepath;
   rightEl.id = Photo.allPhotos[randomRight].name;
 
@@ -72,9 +78,6 @@ function randomPhoto() {
   Photo.lastShown.push(randomLeft, randomMiddle, randomRight);
 
 };
-
-
-
 
 function handleClick(e) {
   if(e.target.id === 'set3') {
@@ -119,29 +122,28 @@ function ChartArray() {
   }
 }
 
-    // console.log(labels, data);
 ChartArray();
 showChart();
-
-
 
 function showChart() {
   var ctx = document.getElementById('chart').getContext('2d');
   var myChart = new Chart(ctx,{
     type: 'bar',
-    data: {
+     data: {
       labels: labels,
-      datasets: [
+       datasets: [
         {
           label: '25 total votes',
           data: data,
           backgroundColor: [
-            'rgba(63, 127, 191, 0.4)'
+            'rgba(63, 127, 191, 0.4)',
+            'rgba(191, 63, 63, 0.6)'
           ],
           hoverBackgroundColor: [
-            'rgba(122, 203, 41, 0.1)'
+            'rgba(122, 203, 41, 0.1)',
+            'rgba(191, 63, 63, 0.6)'
           ],
-          borderWidth: 1
+          borderWidth: 2
         }
       ]
     },
